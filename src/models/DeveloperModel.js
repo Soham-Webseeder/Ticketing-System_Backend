@@ -55,7 +55,7 @@ developerSchema.pre("save",async function(next){
 
     const count=await mongoose.model("Developer").countDocuments();
 const newId=count+1;
-this.customId=`CLI${String(newId).padStart(4,"0")}`
+this.customId=`DEV${String(newId).padStart(4,"0")}`
 next();
 })
 
