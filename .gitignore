@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables (bahut important!)
+.env
+.env.local
+.env.development
+.env.production
+
+# Docker related (local stuff)
+.docker
+docker-compose.override.yml
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# OS generated files
+Thumbs.db
+
+# Build outputs (agar baad mein add karega)
+dist/
+build/
+
+# Mongo data (local volume)
+mongo-data/
