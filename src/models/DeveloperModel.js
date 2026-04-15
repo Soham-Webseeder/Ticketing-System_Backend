@@ -1,9 +1,9 @@
-import mongoose from 'mongoose'
+const mongoose=require("mongoose");
 
 const developerSchema=new mongoose.Schema({
     customId:{
         type:String,
-        required:true
+        
     },
     name:{
         type:String,
@@ -14,13 +14,14 @@ const developerSchema=new mongoose.Schema({
         type:String,
         unique:true,
         lowercase:true,
+        required:true
     },
      password:{
         type:String,
         minlength:6,
         required:true
     },
-    phoneno:{
+    phone:{
 type:String
     },
     status:{
@@ -33,13 +34,15 @@ type:String
     },
     totalProjects:{
         type:Number,
+        default:0
     },
     totalTickets:{
         type:Number,
+        default:0
     },
-    recentActivity:{
+    recentActivity:[{
         type:String
-    }
+    }],
 },{timestamps:true});
 
 developerSchema.pre("save",async function (next){
@@ -61,4 +64,4 @@ next();
 
 const Developer=mongoose.model("Developer",developerSchema);
 
-export default Developerl
+module.exports= Developer;
