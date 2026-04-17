@@ -1,4 +1,4 @@
-import Developer from "../models/DeveloperModel";
+import Developer from "../models/DeveloperModel.js";
 
 export const createDeveloper=async(req,res)=>{
     try{
@@ -70,6 +70,21 @@ if (!developer) {
 
 return res.json({message:"Developer deleted successfully"});
 }catch(err){
+        return res.status(500).json({message:err.message})
+    }
+}
+
+export const getSingleDeveloper=async(req,res)=>{
+    try{
+const {id}=req.params;
+const developer=await Developer.findById(id);
+
+if(!developer){
+    return res.status(404).json({message:"developer not found"});
+}
+
+return res.status(200).json(developer)
+    }catch(err){
         return res.status(500).json({message:err.message})
     }
 }

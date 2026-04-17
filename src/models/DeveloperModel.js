@@ -1,4 +1,5 @@
 const mongoose=require("mongoose");
+const bcrypt=require("bcrypt");
 
 const developerSchema=new mongoose.Schema({
     customId:{
@@ -45,21 +46,21 @@ type:String
     }],
 },{timestamps:true});
 
-developerSchema.pre("save",async function (next){
-    if(!this.isModified("password"))  return next();
+developerSchema.pre("save",async function (){
+    if(!this.isModified("password"))  return;
 
 const salt=await bcrypt.genSalt(10);
 this.password=await bcrypt.hash(this.password,salt);
-next();
+
 })
 
-developerSchema.pre("save",async function(next){
-    if(this.customId) return next();
+developerSchema.pre("save",async function(){
+    if(this.customId) return ;
 
     const count=await mongoose.model("Developer").countDocuments();
 const newId=count+1;
 this.customId=`DEV${String(newId).padStart(4,"0")}`
-next();
+
 })
 
 const Developer=mongoose.model("Developer",developerSchema);
