@@ -1,5 +1,4 @@
-const mongoose=require("mongoose");
-const bcrypt=requite("bcrypt");
+import mongoose from "mongoose";
 
 const clientSchema=new mongoose.Schema({
     customId:{
@@ -62,4 +61,4 @@ next();
 
 const Client=mongoose.model("Client",clientSchema);
 
-module.exports=Client;
+export default Client;

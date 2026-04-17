@@ -28,7 +28,7 @@ type:String
     status:{
         type:String,
         enum:["active","inactive"],
-        default:"inactive"
+        default:"active"
     },
     role:{
         type:String,

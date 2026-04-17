@@ -20,44 +20,68 @@ return res.status(201).json({message:"Developer created successfully",developer}
     }
 }
 
-export const getDeveloper=async(req,res)=>{
-    try{
-const developer=await Developer.find({});
-return res.status(200).json(developer);
-    }catch(err){
-        return res.status(500).json({message:err.message})
+export const getDeveloper = async (req, res) => {
+  try {
+    const developer = await Developer.find({}).select("-password");
+
+    return res.status(200).json(developer);
+
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message
+    });
+  }
+};
+
+export const updateDeveloper = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, phone, password } = req.body;
+
+    const developer = await Developer.findById(id);
+
+    if (!developer) {
+      return res.status(404).json({ message: "Developer not found" });
     }
-}
 
-export const updateDeveloper=async(req,res)=>{
-    try{
-        const {id}=req.params;
-const {name,email,phone,password}=req.body;
+    // ✅ Email duplicate check (excluding current developer)
+    if (email && email !== developer.email) {
+      const existingEmail = await Developer.findOne({
+        email,
+        _id: { $ne: id }
+      });
 
-const developer = await Developer.findById(id);
+      if (existingEmail) {
+        return res.status(400).json({
+          message: "Email already exists"
+        });
+      }
 
-if (!developer) {
-  return res.status(404).json({ message: "Developer not found" });
-}
-
-developer.name = name || developer.name;
-developer.email = email || developer.email;
-developer.phone = phone || developer.phone;
-
-if (password) {
-  developer.password = password; 
-}
-
-await developer.save();
-
-return res.status(200).json({
-  message: "Developer updated successfully",
-  developer,
-});
-    }catch(err){
-        return res.status(500).json({message:err.message})
+      developer.email = email;
     }
-}
+
+    developer.name = name || developer.name;
+    developer.phone = phone || developer.phone;
+
+    if (password) {
+      developer.password = password;
+    }
+
+    await developer.save();
+
+    developer.password = undefined;
+
+    return res.status(200).json({
+      message: "Developer updated successfully",
+      developer
+    });
+
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message
+    });
+  }
+};
 
 export const deleteDeveloper=async(req,res)=>{
 try{
@@ -74,17 +98,23 @@ return res.json({message:"Developer deleted successfully"});
     }
 }
 
-export const getSingleDeveloper=async(req,res)=>{
-    try{
-const {id}=req.params;
-const developer=await Developer.findById(id);
+export const getSingleDeveloper = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-if(!developer){
-    return res.status(404).json({message:"developer not found"});
-}
+    const developer = await Developer.findById(id).select("-password");
 
-return res.status(200).json(developer)
-    }catch(err){
-        return res.status(500).json({message:err.message})
+    if (!developer) {
+      return res.status(404).json({
+        message: "Developer not found"
+      });
     }
-}
+
+    return res.status(200).json(developer);
+
+  } catch (err) {
+    return res.status(500).json({
+      message: err.message
+    });
+  }
+};
