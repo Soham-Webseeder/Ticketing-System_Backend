@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const clientSchema=new mongoose.Schema({
     customId:{
@@ -42,21 +43,21 @@ recentActivity:[{
 }],
 },{timestamps:true});
 
-clientSchema.pre("save",async function (next){
-    if(!this.isModified("password"))  return next();
+clientSchema.pre("save",async function (){
+    if(!this.isModified("password"))  return;
 
 const salt=await bcrypt.genSalt(10);
 this.password=await bcrypt.hash(this.password,salt);
-next();
+
 })
 
-clientSchema.pre("save",async function(next){
-    if(this.customId) return next();
+clientSchema.pre("save",async function(){
+    if(this.customId) return;
 
     const count=await mongoose.model("Client").countDocuments();
 const newId=count+1;
 this.customId=`CLI${String(newId).padStart(4,"0")}`
-next();
+
 })
 
 const Client=mongoose.model("Client",clientSchema);

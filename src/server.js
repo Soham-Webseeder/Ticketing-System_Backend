@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const connectDB = require('./config/db');
 const developer=require('./routes/developerRoutes.js');
+const client=require('./routes/clientRoutes.js');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/developer',developer);
+app.use('/api/client',client);
 
 // DB connect
 connectDB();
