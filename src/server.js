@@ -6,6 +6,8 @@ const morgan = require('morgan');
 const connectDB = require('./config/db');
 const developer=require('./routes/developerRoutes.js');
 const client=require('./routes/clientRoutes.js');
+const project=require('./routes/projectRoutes.js');
+const ticket=require('./routes/ticketRoutes.js');
 
 const app = express();
 
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/developer',developer);
 app.use('/api/client',client);
+app.use('/api/project',project);
+app.use('/api/ticket',ticket);
 
 // DB connect
 connectDB();

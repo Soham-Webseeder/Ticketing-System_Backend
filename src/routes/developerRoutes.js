@@ -3,10 +3,10 @@ const { getDeveloper, createDeveloper, updateDeveloper, deleteDeveloper, getSing
 
 const router=express.Router();
 
-router.get("/get-all-developers",getDeveloper);
-router.post("/create-developer",createDeveloper);
-router.put("/update-developer/:id",updateDeveloper);
-router.delete("/delete-developer/:id",deleteDeveloper);
-router.get("/get-single-developer/:id",getSingleDeveloper);
+router.get("/",getDeveloper);
+router.post("/",createDeveloper);
+router.put("/:id",updateDeveloper);
+router.delete("/:id",deleteDeveloper);
+router.get("/:id",getSingleDeveloper);
 
 module.exports = router;

@@ -40,11 +40,11 @@ const projectSchema=new mongoose.Schema({
     }]
 },{timestamps:true});
 
-projectSchema.pre("save",async function(next){
+projectSchema.pre("save",async function(){
     if(!this.apiKey){
         this.apiKey=await crypto.randomBytes(16).toString("hex");
     }
-    next();
+    
 })
 
 const Project=mongoose.model("Project",projectSchema);
