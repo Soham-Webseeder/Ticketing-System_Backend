@@ -13,8 +13,13 @@ if(existingTicket){
 }
 
 await Ticket.create({
-    title,description,status,priority,project,createdBy:"admin"
+    title,description,status,priority,project, createdBy: req.user.role,
+  creator: req.user.id
 })
+
+await Project.findByIdAndUpdate(project, {
+  $push: { ticket: newTicket._id }
+});
 
 return res.status(201).json({message:"Ticket created"})
     }catch(err){
@@ -69,6 +74,9 @@ export const updateTicket = async (req, res) => {
       return res.status(404).json({ message: "Ticket not found" });
     }
 
+    if (req.user.role === "client" && ticket.creator.toString() !== req.user.id) {
+  return res.status(403).json({ message: "Not allowed" });
+}
     
     const allowedFields = ["title", "description", "status", "priority"];
 
@@ -99,6 +107,11 @@ const ticket=await Ticket.findById(id);
 if(!ticket){
     return res.status(404).json({message:"Ticket not found"});
 }
+
+await Project.findByIdAndUpdate(ticket.project, {
+  $pull: { ticket: ticket._id }
+});
+
 
 await ticket.deleteOne(); 
 return res.status(200).json({message:"Ticket deleted successfully"});

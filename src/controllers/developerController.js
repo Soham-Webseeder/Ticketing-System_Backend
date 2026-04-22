@@ -102,6 +102,12 @@ export const getSingleDeveloper = async (req, res) => {
   try {
     const { id } = req.params;
 
+    if (req.user.role === "developer" && req.user.id !== id) {
+  return res.status(403).json({
+    message: "You can only view your own profile"
+  });
+}
+
     const developer = await Developer.findById(id).select("-password");
 
     if (!developer) {

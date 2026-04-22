@@ -44,6 +44,10 @@ type:String
     recentActivity:[{
         type:String
     }],
+    role: {
+  type: String,
+  default: "developer"
+}
 },{timestamps:true});
 
 developerSchema.pre("save",async function (){

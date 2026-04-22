@@ -33,11 +33,20 @@ return res.status(200).json(clients);
 export const singleClient=async(req,res)=>{
     try{
 const {id}=req.params;
+
+ if (req.user.role === "client" && req.user.id !== id) {
+      return res.status(403).json({
+        message: "You can only view your own profile"
+      });
+    }
+
 const client=await Client.findById(id).select("-password");
 
 if(!client){
     return res.status(404).json({message:"Client not found"});
 }
+
+
 
 return res.status(200).json(client);
     }catch(err){
@@ -54,6 +63,12 @@ export const updateClient = async (req, res) => {
 
     if (!client) {
       return res.status(404).json({ message: "Client not found" });
+    }
+
+     if (req.user.role === "client" && req.user.id !== id) {
+      return res.status(403).json({
+        message: "You can update only your own profile"
+      });
     }
 
     // ✅ Email duplicate check (excluding current developer)
@@ -104,6 +119,8 @@ const client=await Client.findByIdAndDelete(id);
 if(!client){
     return res.status(404).json({message:"Client not found"});
 }
+
+
 
 return res.status(200).json({message:"Client deleted successfully"});
     } catch (err) {

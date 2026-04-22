@@ -41,6 +41,10 @@ totalTickets:{
 recentActivity:[{
     type:String,
 }],
+role: {
+  type: String,
+  default: "client"
+}
 },{timestamps:true});
 
 clientSchema.pre("save",async function (){

@@ -71,7 +71,15 @@ export const updateProject = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    Object.assign(project, req.body);
+    const allowedFields = ["projectName","description","status","startDate","endDate"];
+
+allowedFields.forEach(field => {
+  if (req.body[field] !== undefined) {
+    project[field] = req.body[field];
+  }
+});
+
+    Object.assign(project);
 
     await project.save();
 
