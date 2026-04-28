@@ -1,4 +1,4 @@
-export const authorizeRoles = (...roles) => {
+ const authorizeRoles = (...roles) => {
   return (req, res, next) => {
 
     if (!roles.includes(req.user.role)) {
@@ -10,3 +10,5 @@ export const authorizeRoles = (...roles) => {
     next();
   };
 };
+
+module.exports={authorizeRoles};

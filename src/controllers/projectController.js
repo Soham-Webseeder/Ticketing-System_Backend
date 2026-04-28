@@ -1,9 +1,9 @@
-import Project from "../models/ProjectModel.js";
-import mongoose from "mongoose";
-import Client from "../models/ClientModel.js";
-import Developer from "../models/DeveloperModel.js";
+const Project=require("../models/ProjectModel.js");
+const mongoose=require("mongoose");
+const Client=require("../models/ClientModel.js");
+const Developer=require("../models/DeveloperModel.js");
 
-export const createProject=async(req,res)=>{
+const createProject=async(req,res)=>{
     try{
 const {projectName,description,startDate,endDate,status,client,assignedDeveloper}=req.body;
 
@@ -45,7 +45,7 @@ return res.status(201).json({message:"Project Created"});
     }
 }
 
-export const getProjects=async(req,res)=>{
+const getProjects=async(req,res)=>{
     try{
 const projects = await Project.find({})
       .populate("client")
@@ -61,7 +61,7 @@ return res.status(200).json(projects);
     }
 }
 
-export const updateProject = async (req, res) => {
+const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -93,7 +93,7 @@ allowedFields.forEach(field => {
 };
 
 
-export const getProject=async(req,res)=>{
+const getProject=async(req,res)=>{
     try{
 const {id}=req.params;
 
@@ -112,7 +112,7 @@ return res.status(200).json(project);
     }
 }
 
-export const deleteProject=async(req,res)=>{
+const deleteProject=async(req,res)=>{
     try{
         const {id}=req.params;
         const project=await Project.findById(id);
@@ -129,3 +129,5 @@ export const deleteProject=async(req,res)=>{
         return res.status(500).json({message:"Something went wrong"});
     }
 }
+
+module.exports={deleteProject,createProject,updateProject,getProject,getProjects};

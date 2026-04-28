@@ -1,25 +1,38 @@
 
-import Ticket from "../models/TicketModel.js";
+const Ticket=require("../models/TicketModel.js");
+const Project=require("../models/ProjectModel.js");
 
 
-export const createTicket=async(req,res)=>{
+const createTicket=async(req,res)=>{
     try{
 const {title,description,status,priority,project}=req.body;
 
-const existingTicket=await Ticket.findOne({title});
+const existingTicket = await Ticket.findOne({
+  title,
+  project
+});
 
 if(existingTicket){
     return res.status(400).json({message:"Ticket already exist"});
 }
 
-await Ticket.create({
-    title,description,status,priority,project, createdBy: req.user.role,
+const newTicket=await Ticket.create({
+    title,description,status,priority,project, createdBy:  req.user.role === "admin"
+    ? "Admin"
+    : req.user.role === "client"
+    ? "Client"
+    : "Developer",
   creator: req.user.id
 })
+
 
 await Project.findByIdAndUpdate(project, {
   $push: { ticket: newTicket._id }
 });
+
+if (!project) {
+  return res.status(400).json({ message: "Project is required" });
+}
 
 return res.status(201).json({message:"Ticket created"})
     }catch(err){
@@ -28,7 +41,7 @@ return res.status(201).json({message:"Ticket created"})
     }
 }
 
-export const getTickets=async(req,res)=>{
+const getTickets=async(req,res)=>{
     try{
 const tickets=await Ticket.find()
  .populate("project")
@@ -41,11 +54,12 @@ if(tickets.length===0){
 
 return res.status(200).json(tickets);
     }catch(err){
+      console.log(err);
         return res.status(500).json({message:"Something went wrong"});
     }
 }
 
-export const getTicket=async(req,res)=>{
+const getTicket=async(req,res)=>{
     try{
 const {id}=req.params;
 
@@ -64,7 +78,7 @@ return res.status(200).json(ticket);
     }
 }
 
-export const updateTicket = async (req, res) => {
+const updateTicket = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -98,7 +112,7 @@ export const updateTicket = async (req, res) => {
   }
 };
 
-export const deleteTicket=async(req,res)=>{
+ const deleteTicket=async(req,res)=>{
     try{
 const {id}=req.params;
 
@@ -119,3 +133,5 @@ return res.status(200).json({message:"Ticket deleted successfully"});
         return res.status(500).json({message:"Something went wrong"});
     }
 }
+
+module.exports={deleteTicket,createTicket,updateTicket,getTicket,getTickets};

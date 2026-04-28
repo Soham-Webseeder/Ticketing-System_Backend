@@ -1,6 +1,6 @@
-import Developer from "../models/DeveloperModel.js";
+const Developer=require("../models/DeveloperModel.js");
 
-export const createDeveloper=async(req,res)=>{
+ const createDeveloper=async(req,res)=>{
     try{
 const {name,email,password,phone}=req.body;
 
@@ -20,7 +20,7 @@ return res.status(201).json({message:"Developer created successfully",developer}
     }
 }
 
-export const getDeveloper = async (req, res) => {
+const getDeveloper = async (req, res) => {
   try {
     const developer = await Developer.find({}).select("-password");
 
@@ -33,7 +33,7 @@ export const getDeveloper = async (req, res) => {
   }
 };
 
-export const updateDeveloper = async (req, res) => {
+ const updateDeveloper = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, phone, password } = req.body;
@@ -83,7 +83,7 @@ export const updateDeveloper = async (req, res) => {
   }
 };
 
-export const deleteDeveloper=async(req,res)=>{
+ const deleteDeveloper=async(req,res)=>{
 try{
 const {id}=req.params;
 
@@ -98,7 +98,7 @@ return res.json({message:"Developer deleted successfully"});
     }
 }
 
-export const getSingleDeveloper = async (req, res) => {
+ const getSingleDeveloper = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -124,3 +124,5 @@ export const getSingleDeveloper = async (req, res) => {
     });
   }
 };
+
+module.exports={createDeveloper,updateDeveloper,getDeveloper,getSingleDeveloper,deleteDeveloper}

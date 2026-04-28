@@ -1,6 +1,6 @@
-import Client from "../models/ClientModel.js";
+const Client=require("../models/ClientModel.js");
 
-export const createClient=async(req,res)=>{
+ const createClient=async(req,res)=>{
     try{
 const {name,email,password,phone}=req.body;
 
@@ -20,7 +20,7 @@ return res.status(201).json({message:"Client created successfully"});
     }
 }
 
-export const getClient=async(req,res)=>{
+const getClient=async(req,res)=>{
     try{
 const clients=await Client.find({}).select("-password");
 
@@ -30,7 +30,7 @@ return res.status(200).json(clients);
     }
 }
 
-export const singleClient=async(req,res)=>{
+ const singleClient=async(req,res)=>{
     try{
 const {id}=req.params;
 
@@ -54,7 +54,7 @@ return res.status(200).json(client);
     }
 }
 
-export const updateClient = async (req, res) => {
+ const updateClient = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, phone, password } = req.body;
@@ -110,7 +110,7 @@ export const updateClient = async (req, res) => {
   }
 };
 
-export const deleteClient=async(req,res)=>{
+ const deleteClient=async(req,res)=>{
     try{
 const {id}=req.params;
 
@@ -129,3 +129,5 @@ return res.status(200).json({message:"Client deleted successfully"});
     });
   }
 }
+
+module.exports={createClient,updateClient,deleteClient,getClient,singleClient};

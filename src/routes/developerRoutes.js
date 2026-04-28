@@ -1,7 +1,7 @@
 const express=require("express");
 const { getDeveloper, createDeveloper, updateDeveloper, deleteDeveloper, getSingleDeveloper } = require("../controllers/developerController");
 const { verifyToken } = require("../middleware/authmiddleware");
-const { authorizeRoles } = require("../middleware/authorizeRoles");
+const  {authorizeRoles}  = require("../middleware/authorizeRoles");
 
 const router=express.Router();
 

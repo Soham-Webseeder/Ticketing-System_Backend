@@ -1,49 +1,49 @@
-import Admin from "../models/AdminSchema.js";
-import Client from "../models/ClientModel.js";
-import Developer from "../models/DeveloperModel.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+const Admin =require("../models/AdminSchema.js");
+const Client =require("../models/ClientModel.js");
+const Developer=require("../models/DeveloperModel.js");
+const bcrypt=require("bcrypt");
+const jwt=require("jsonwebtoken");
 
-export const login=async(req,res)=>{
-    try{
-const {email,password}=req.body;
+ const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    console.log(req.body);
 
-let user=null;
+    const normalizedEmail = email.toLowerCase().trim();
 
-user=await Admin.findOne({email});
+    let user =
+      await Admin.findOne({ email: normalizedEmail }) ||
+      await Client.findOne({ email: normalizedEmail }) ||
+      await Developer.findOne({ email: normalizedEmail });
 
-if(!user){
-    user=await Client.findOne({email});
-}
+      console.log(user);
 
-if(!user){
-    user=await Developer.findOne({email});
-}
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-if(!user){
-    return res.status(404).json({message:"User not found"});
-}
+    const isMatch = await bcrypt.compare(password, user.password);
 
-const isMatch=await bcrypt.compare(password,user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
-if(!isMatch){
-    return res.status(400).json({message:"Invalid credentials"});
-}
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
 
-const token=jwt.sign(
-    {id:user._id,role:user.role},
-process.env.JWT_SECRET,
-{expiresIn:"1d"}
-)
-
- return res.status(200).json({
+    return res.status(200).json({
       message: "Login successful",
       token,
-      role: user.role
+      role: user.role,
     });
 
-    }catch(err){
-        console.log(err);
-        return res.status(500).json({message:"something went wrong"});
-    }
-}
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+module.exports={login};

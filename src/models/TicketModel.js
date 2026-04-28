@@ -25,7 +25,7 @@ const ticketSchema=new mongoose.Schema({
     },
     createdBy:{
         type:String,
-        enum:["admin","client"],
+        enum:["Admin","Client"],
         required:true,
     },
     creator: {
