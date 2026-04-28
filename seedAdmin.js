@@ -7,6 +7,7 @@ dotenv.config();
 const seedAdmin = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
+    console.log("DB NAME:", mongoose.connection.name);
 
     
     const existing = await Admin.findOne({ email: "admin@gmail.com" });

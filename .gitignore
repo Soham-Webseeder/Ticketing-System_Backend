@@ -44,3 +44,7 @@ build/
 
 # Mongo data (local volume)
 mongo-data/
+
+# Docker files (do not push)
+Dockerfile
+docker-compose.yml
